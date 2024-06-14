@@ -25,13 +25,12 @@ use App\Http\Middleware\ApiAuthMiddleware;
 //     return $request->user();
 // });
 
-Route::prefix('api')->group(function () {
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/register', [UserController::class, 'register']);
-    Route::delete('/logout', [UserController::class, 'logout']);
-    Route::get('/user', [UserController::class, 'get']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/register', [UserController::class, 'register']);
+Route::delete('/logout', [UserController::class, 'logout']);
+Route::get('/user', [UserController::class, 'get']);
 
-    Route::middleware(ApiAuthMiddleware::class)->group(function () {
+Route::middleware(ApiAuthMiddleware::class)->group(function () {
     // Route::resource('anggota', AnggotaController::class);
     // Route::resource('jenis-transaksi', JenisTransaksiController::class);
     // Route::resource('tabungan', TabunganAnggotaController::class);
@@ -40,5 +39,4 @@ Route::prefix('api')->group(function () {
 
     // Route::get('/setting-bunga', [SettingBungaController::class, 'index']);
     // Route::get('add-setting-bunga', [SettingBungaController::class, 'addSettingBunga']);
-    });
 });
