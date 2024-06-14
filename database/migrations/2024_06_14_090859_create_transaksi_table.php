@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
-            $table->string("username", 100)->nullable(false)->unique("users_username_unique");
-            $table->string("email", 100)->nullable(false)->unique("users_username_unique");
-            $table->string('password');
-            $table->string("token", 100)->nullable()->unique("users_token_unique");
+            $table->bigInteger("nominal", 1000)->nullable(false);
+            $table->unsignedBigInteger("jenis_transaksi_id", 100)->nullable(false);
             $table->timestamps();
+            $table->foreign("jenis_transaksi_id")->on("jenis_transaksi")->references("id");
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('transaksi');
     }
 };

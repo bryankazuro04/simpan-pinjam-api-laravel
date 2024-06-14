@@ -8,6 +8,7 @@ use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\SettingBungaController;
 use App\Http\Controllers\JenisTransaksiController;
 use App\Http\Controllers\TabunganAnggotaController;
+use App\Http\Middleware\ApiAuthMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,18 +26,19 @@ use App\Http\Controllers\TabunganAnggotaController;
 // });
 
 Route::prefix('api')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [UserController::class, 'register']);
+    Route::delete('/logout', [UserController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'get']);
 
-    Route::get('/user', [UserController::class, 'get_user']);
+    Route::middleware(ApiAuthMiddleware::class)->group(function () {
+    // Route::resource('anggota', AnggotaController::class);
+    // Route::resource('jenis-transaksi', JenisTransaksiController::class);
+    // Route::resource('tabungan', TabunganAnggotaController::class);
 
-    Route::resource('anggota', AnggotaController::class);
-    Route::resource('jenis-transaksi', JenisTransaksiController::class);
-    Route::resource('tabungan', TabunganAnggotaController::class);
+    // Route::get('/saldo/(:id)', [TabunganAnggotaController::class, 'saldo/$1']);
 
-    Route::get('/saldo/(:id)', [TabunganAnggotaController::class, 'saldo/$1']);
-
-    Route::get('/setting-bunga', [SettingBungaController::class, 'index']);
-    Route::get('add-setting-bunga', [SettingBungaController::class, 'addSettingBunga']);
+    // Route::get('/setting-bunga', [SettingBungaController::class, 'index']);
+    // Route::get('add-setting-bunga', [SettingBungaController::class, 'addSettingBunga']);
+    });
 });
