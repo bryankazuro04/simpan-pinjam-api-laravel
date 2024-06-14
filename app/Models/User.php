@@ -18,7 +18,6 @@ class User extends Model implements Authenticatable
         'username',
         'email',
         'password',
-        'name',
     ];
 
     public function anggota(): HasMany
