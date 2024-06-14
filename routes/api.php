@@ -27,16 +27,16 @@ use App\Http\Middleware\ApiAuthMiddleware;
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
-Route::delete('/logout', [UserController::class, 'logout']);
-Route::get('/user', [UserController::class, 'get']);
 
-Route::middleware(ApiAuthMiddleware::class)->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'get']);
+    Route::put('/user/update', [UserController::class, 'update']);
     // Route::resource('anggota', AnggotaController::class);
     // Route::resource('jenis-transaksi', JenisTransaksiController::class);
     // Route::resource('tabungan', TabunganAnggotaController::class);
-
     // Route::get('/saldo/(:id)', [TabunganAnggotaController::class, 'saldo/$1']);
-
     // Route::get('/setting-bunga', [SettingBungaController::class, 'index']);
     // Route::get('add-setting-bunga', [SettingBungaController::class, 'addSettingBunga']);
 });
+

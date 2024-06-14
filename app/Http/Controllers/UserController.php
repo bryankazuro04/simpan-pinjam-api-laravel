@@ -40,26 +40,32 @@ class UserController extends Controller
         return (new UserResource($user))->response()->setStatusCode(201);
     }
 
-    public function login(UserLoginRequest $request): UserResource
+    public function login(UserLoginRequest $request)
     {
-        $data = $request->validated();
-        $user = User::where('email', $data['email'])->first();
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw new HttpResponseException(
-                response(
-                    [
-                        'errors' => [
-                            'message' => ['email or Password Wrong'],
-                        ],
-                    ],
-                    401,
-                ),
-            );
+        $credentials = $request->only('email', 'password');
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid credentials',
+                'data' => null
+            ], 401);
         }
 
-        $user->token = Str::uuid()->toString();
-        $user->save();
-        return new UserResource($user);
+        // Buat token
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        // Kembalikan respons berhasil
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successfully',
+            'data' => [
+                'token' => $token,
+                'user' => new UserResource($user)
+            ]
+        ]);
     }
 
     public function get(Request $request): UserResource
@@ -87,14 +93,13 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(Request $request)
     {
-        $user = Auth::user();
-        $user->token = null;
-        $user->save();
+        $request->user()->tokens()->delete();
 
         return response()->json([
-            'data' => true
-        ])->setStatusCode(200);
+            'success' => true,
+            'message' => 'Logged out successfully',
+        ]);
     }
 }

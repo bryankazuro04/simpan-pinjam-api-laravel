@@ -2,15 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model implements Authenticatable
+class User extends Model implements AuthenticatableContract
 {
-    protected $table = "users";
-    protected $primaryKey = "id";
-    protected $keyType = "int";
+    use HasApiTokens, Notifiable, Authenticatable;
+
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+    protected $keyType = 'int';
     public $incrementing = true;
     public $timestamps = true;
 
@@ -22,31 +27,36 @@ class User extends Model implements Authenticatable
 
     public function anggota(): HasMany
     {
-        return $this->hasMany(Anggota::class, "user_id", "id");
+        return $this->hasMany(Anggota::class, 'user_id', 'id');
     }
 
     public function getAuthIdentifierName()
     {
-        return ['username', 'gmail'];
+        return 'id';
     }
+
     public function getAuthIdentifier()
     {
-        return $this->username;
+        return $this->getKey();
     }
+
     public function getAuthPassword()
     {
         return $this->password;
     }
+
     public function getRememberToken()
     {
-        return $this->token;
+        return $this->getAttribute('remember_token');
     }
+
     public function setRememberToken($value)
     {
-        $this->token = $value;
+        $this->setAttribute('remember_token', $value);
     }
+
     public function getRememberTokenName()
     {
-        return 'token';
+        return 'remember_token';
     }
 }
