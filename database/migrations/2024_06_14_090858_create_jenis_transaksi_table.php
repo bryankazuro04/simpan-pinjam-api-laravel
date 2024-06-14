@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jenis_transaksi', function (Blueprint $table) {
             $table->id();
             $table->string("trx_name", 100)->nullable(false);
-            $table->integer("trx_multiply", 100)->nullable(false);
+            $table->integer("trx_multiply")->nullable(false);
             $table->timestamps();
         });
     }

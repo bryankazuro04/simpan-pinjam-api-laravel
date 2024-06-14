@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("nominal", 1000)->nullable(false);
-            $table->unsignedBigInteger("jenis_transaksi_id", 100)->nullable(false);
+            $table->bigInteger("nominal")->nullable(false);
+            $table->unsignedBigInteger("jenis_transaksi_id")->nullable(false);
             $table->timestamps();
-            $table->foreign("jenis_transaksi_id")->on("jenis_transaksi")->references("id");
+            $table->foreign("jenis_transaksi_id")->references("id")->on("jenis_transaksi");
         });
     }
 

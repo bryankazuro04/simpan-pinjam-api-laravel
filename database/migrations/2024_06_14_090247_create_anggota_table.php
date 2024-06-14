@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('anggota', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("nomor_induk", 100)->nullable(false);
+            $table->bigInteger("nomor_induk")->nullable(false)->unique();
             $table->string("nama", 100)->nullable(false);
             $table->string("alamat", 100)->nullable(false);
             $table->date("tanggal_lahir")->nullable(false);
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger("user_id")->nullable(false);
             $table->timestamps();
             //relasi
-            $table->foreign("user_id")->on("users")->references("id");
+            $table->foreign("user_id")->references("id")->on("users");
         });
     }
 
